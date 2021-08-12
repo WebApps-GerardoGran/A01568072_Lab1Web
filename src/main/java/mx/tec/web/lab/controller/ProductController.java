@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,10 +58,10 @@ public class ProductController {
 	}
 	
 	@PutMapping("/products/{id}")
-	public ResponseEntity<Product> updateProductDescription(@PathVariable(value = "id") String id,@RequestBody Product updatedProduct) {
+	public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") String id,@RequestBody Product updatedProduct) {
 		ResponseEntity<Product> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		
-		Optional<Product> product = productManager.getProduct(updatedProduct.getId());
+		Optional<Product> product = productManager.getProduct(id);
 		
 		if (product.isPresent()) {
 			productManager.updateProduct(id, updatedProduct);
@@ -68,5 +69,19 @@ public class ProductController {
 		}
 		return responseEntity;
 	}
+	
+	@DeleteMapping("/products/{id}")
+	public ResponseEntity<List<Product>>  deleteProduct(@PathVariable(value = "id") String id) {
+		ResponseEntity<List<Product>>  responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
+		Optional<Product> product = productManager.getProduct(id);
+		
+		if (product.isPresent()) {
+			productManager.deleteProduct(id);
+			List<Product> products = productManager.getProducts();
+			responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
 
+		}
+		return responseEntity;
+	}
 }

@@ -5,6 +5,7 @@ package mx.tec.web.lab.manager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,5 +79,10 @@ public class ProductManager {
 	public void updateProduct(final String productID, final Product updatedProduct) {
 		products.set(getProductIndex(productID).get(), updatedProduct);
 	}
+	
+	public void deleteProduct(final String productID) {
+		products.remove(getProduct(productID).get());
+	}
+
 
 }
