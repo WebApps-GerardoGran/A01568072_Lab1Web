@@ -59,11 +59,24 @@ public class ProductManager {
 		return foundProduct;
 	}
 	
+	public Optional<Integer> getProductIndex(final String id) {
+		int i = 0;
+		for (final Product product : products) {
+			if (product.getId().equals(id)) {
+				return Optional.of(i);
+			}
+			i++;
+		}
+		return Optional.empty();
+	}
+	
 	public Optional<Product> addProduct(final Product newProduct) {
 		products.add(newProduct);
 		return Optional.of(newProduct);
 	}
-
-
+	
+	public void updateProduct(final String productID, final Product updatedProduct) {
+		products.set(getProductIndex(productID).get(), updatedProduct);
+	}
 
 }

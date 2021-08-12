@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.tec.web.lab.manager.ProductManager;
@@ -42,7 +44,7 @@ public class ProductController {
 	}	
 	
 	@PostMapping("/products")
-	public ResponseEntity<Product> addProduct(Product newProduct) {
+	public ResponseEntity<Product> addProduct(@RequestBody Product newProduct) {
 		ResponseEntity<Product> responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		Optional<Product> product = productManager.addProduct(newProduct);
@@ -51,6 +53,19 @@ public class ProductController {
 			responseEntity = new ResponseEntity<>(product.get(), HttpStatus.CREATED);
 		}
 		
+		return responseEntity;
+	}
+	
+	@PutMapping("/products/{id}")
+	public ResponseEntity<Product> updateProductDescription(@PathVariable(value = "id") String id,@RequestBody Product updatedProduct) {
+		ResponseEntity<Product> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
+		Optional<Product> product = productManager.getProduct(updatedProduct.getId());
+		
+		if (product.isPresent()) {
+			productManager.updateProduct(id, updatedProduct);
+			responseEntity = new ResponseEntity<>(productManager.getProduct(updatedProduct.getId()).get(), HttpStatus.CREATED);
+		}
 		return responseEntity;
 	}
 
